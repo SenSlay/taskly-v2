@@ -4,4 +4,10 @@ Taskly is a lightweight project and task management tool designed for teams and 
 
 [Live Demo](https://senslay.github.io/taskly-v2/)
 
-## NOTES:
+## To do:
+
+- Implement Overview Page
+- Improve UI Design- especially the Tasks list in the Board page
+- Maybe a Landing page?
+- Fake login/signup page?
+- Allow users to input a project name?
