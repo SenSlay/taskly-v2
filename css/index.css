@@ -1,0 +1,19 @@
+body {
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+  border: 2px solid blue;
+  border-radius: 10px;
+}

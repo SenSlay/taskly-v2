@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backlog - Taskly</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/backlog.css">
+  <script src="https://kit.fontawesome.com/19aba0697a.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>
+    <h1>Taskly</h1>
+    <div>
+      <div>
+        <i class="fa-solid fa-circle-user" style="font-size: 20px; margin-right: 5px;"></i>
+        Username
+      </div>
+    </div>
+  </header>
+
+  <main class="backlog-content">
+    <aside class="sidebar">
+      <div>
+        <i class="fa-regular fa-circle-user"></i>
+        Project Name
+      </div>
+      <a href="#"><i class="fa-solid fa-chart-pie"></i>Overview</a>
+      <a href="#" class="active-link"><i class="fa-solid fa-list-check"></i>Backlog</a>
+      <a href="/pages/board.html"><i class="fa-solid fa-chart-simple"></i>Board</a>  
+      <div class="line"></div>
+      <a href="#"><i class="fa-solid fa-gears"></i>Project Settings</a>  
+    </aside>
+
+    <!-- When writing CSS, use ".backlog-content" first to avoid conflict with other class names -->
+    <div class="main-content">
+      <h1 class="page-title">Backlog</h1>
+
+      <!-- WRITE THE CONTENT HERE -->
+      <ul class="sprint-list-container">
+        
+      </ul>
+
+      <div class="backlog-container">
+        <div>
+          <h2>Backlog</h2>
+          <p>0 Tasks</p>
+          <button class="create-sprint-button" onclick="openModal()">Create Sprint</button>
+        </div>
+
+        <div class="issue-container">
+          <p>Your backlog is empty.</p>
+        </div>
+
+        <div>
+          <button class="create-backlog-task-button">+ Create Task</button>
+        </div>
+      </div>
+     <!--MODAL-->
+     <div class="modal fade" id="sprintModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-content">
+              <div class="modal-header">
+      <div class="modal" id="sprintModal">
+        <h2 class="modal-title" id="modalTitle">CREATE SPRINT</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+        
+        <!-- PLACE THE FORM BELOW IN A FORM ELEMENT <FORM></FORM> -->
+        
+        <div class="modal-body">
+          <form id="sprintForm">
+              <div class="mb-3">
+        <div class="Sprint Name">Sprint Name:</div><input type="text" id="sprintName" placeholder="Enter Text">
+        <div class="startDate">Start Date:</div><input type="date" id="startDate">
+        <div class="endDate">End Date:</div><input type="date" id="endDate">
+        <div class="Sprint Description">Sprint Description:</div><textarea id="sprintDescription" placeholder="Enter Text"></textarea>
+        <div class="modal-buttons">
+            <button type="button" class="modal-button cancel-btn" onclick="closeModal()">Cancel</button>
+            <button type="button" class="btn btn-success" onclick="addSprint()">Add Sprint</button>
+          </div>
+        </div>
+        </form>
+      </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Modal -->
+      <div class="modal-overlay" id="taskModal">
+        <div class="modal">
+          <h2 class="task-modal-title">Create New Task</h2>
+          <form id="taskForm">
+            <div class="form-group">
+              <label>Task Name:</label>
+              <input type="text" id="taskName" required>
+            </div>
+            <div class="form-group">
+              <label>Status:</label>
+              <select id="taskStatus">
+                <option value="To Do">To Do</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Assigned To:</label>
+              <input type="text" id="taskAssigned">
+            </div>
+            <div class="modal-buttons">
+              <button type="button" class="cancel-btn">Cancel</button>
+              <button type="submit" class="task-modal-add-btn">Add Task</button>
+            </div>
+          </form>
+        </div>
+      </div>
+  </main>
+  <script src="/js/app.js"></script>
+</body>
+</html>
