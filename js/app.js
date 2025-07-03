@@ -487,7 +487,7 @@ if (board) {
         columnHeader.classList.add("column-header");
 
         const titleSpan = document.createElement("span");
-        titleSpan.textContent = name;
+        titleSpan.textContent = name.toUpperCase();
 
         const createTaskBtn = document.createElement("button");
         createTaskBtn.classList.add("create-task");
@@ -654,13 +654,14 @@ if (board) {
         title.appendChild(input);
         input.focus();
 
-        input.addEventListener("blur", () => saveColumnName(title, input));
-        input.addEventListener("keypress", (e) => e.key === "Enter" && saveColumnName(title, input));
+        input.addEventListener("blur", () => saveColumnName(title, currentText, input));
+        input.addEventListener("keypress", (e) => e.key === "Enter" && saveColumnName(title, currentText, input));
     }
 
-    function saveColumnName(header, input) {
-        const newText = input.value.trim() || "Untitled Column";
-        const index = kanbanColumns.indexOf(header.textContent);
+    function saveColumnName(header, currentText, input) {
+        const newText = input.value.trim().toUpperCase() || "Untitled Column";
+        const index = kanbanColumns.indexOf(currentText.toUpperCase());
+        
         if (index !== -1) {
             kanbanColumns[index] = newText;
             saveColumns();
@@ -671,7 +672,7 @@ if (board) {
     function deleteColumn(column) {
       const columnName = column.querySelector(".column-header span").textContent;
       const index = kanbanColumns.indexOf(columnName);
-  
+      
       if (index !== -1) {
           // Update tasks that were in this column
           backlogTasks.forEach(task => {
@@ -702,7 +703,7 @@ if (board) {
     }
 
     addColumnBtn.addEventListener("click", function () {
-        const columnName = prompt("Enter column name:").trim();
+        const columnName = prompt("Enter column name:").trim().toUpperCase();
         if (columnName) {
             kanbanColumns.push(columnName);
             saveColumns();
@@ -711,4 +712,76 @@ if (board) {
     });
 
     renderBoard();
+}
+
+// Overview
+// Fetch tasks and sprints from localStorage
+const overview = document.querySelector(".overview-page");
+if (overview) {
+
+  console.log(sprints)
+
+  const allTasks = [
+    ...sprints.flatMap(s => s.tasks),
+    ...backlogTasks
+  ];
+
+  const statusCounts = Object.fromEntries(kanbanColumns.map(status => [status, 0]));
+  allTasks.forEach(task => {
+    const status = (task.status || "").toUpperCase();
+    for (const col of kanbanColumns) {
+      if (col.toUpperCase() === status) {
+        statusCounts[col]++;
+        break;
+      }
+    }
+  });
+
+  console.log(statusCounts);
+
+  const statusCtx = document.getElementById("statusChart")?.getContext("2d");
+  if (statusCtx) {
+    new Chart(statusCtx, {
+      type: "pie",
+      data: {
+        labels: Object.keys(statusCounts),
+        datasets: [{
+          label: "Status",
+          data: Object.values(statusCounts),
+          backgroundColor: Object.keys(statusCounts).map((_, i) => `hsl(${i * 360 / Object.keys(statusCounts).length}, 70%, 60%)`)
+        }]
+      },
+      options: { responsive: true }
+    });
+  }
+
+  const legendContainer = document.querySelector(".legend");
+  if (legendContainer) {
+    legendContainer.innerHTML = ""; // Clear existing static content
+
+    Object.keys(statusCounts).forEach((status, i) => {
+      const color = `hsl(${i * 360 / Object.keys(statusCounts).length}, 70%, 60%)`;
+
+      const p = document.createElement("p");
+      p.innerHTML = `<span style="color: ${color}">■</span> ${status}`;
+      legendContainer.appendChild(p);
+    });
+  }
+
+  const completedSprints = sprints.filter(s => s.completed).length;
+  const ongoingSprints = sprints.length - completedSprints;
+
+  const ctxSprint = document.getElementById("sprintChart").getContext("2d");
+  new Chart(ctxSprint, {
+    type: "pie",
+    data: {
+      labels: ["Completed", "Ongoing"],
+      datasets: [{
+        data: [completedSprints, ongoingSprints],
+        backgroundColor: ["#4caf50", "#ff9800"]
+      }]
+    },
+    options: { responsive: true }
+  });
+
 }
