@@ -671,12 +671,12 @@ if (board) {
 
     function deleteColumn(column) {
       const columnName = column.querySelector(".column-header span").textContent;
-      const index = kanbanColumns.indexOf(columnName);
+      const index = kanbanColumns.findIndex(col => col.toUpperCase() === columnName.toUpperCase());
       
       if (index !== -1) {
           // Update tasks that were in this column
           backlogTasks.forEach(task => {
-              if (task.status.toUpperCase() === columnName.toUpperCase()) {
+              if (task.status === columnName) {
                   task.status = ""; // Remove status
               }
           });
