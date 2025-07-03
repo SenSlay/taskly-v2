@@ -676,7 +676,7 @@ if (board) {
       if (index !== -1) {
           // Update tasks that were in this column
           backlogTasks.forEach(task => {
-              if (task.status === columnName) {
+              if (task.status.toUpperCase() === columnName.toUpperCase()) {
                   task.status = ""; // Remove status
               }
           });
@@ -719,6 +719,8 @@ if (board) {
 document.addEventListener("DOMContentLoaded", () => {
   const overview = document.querySelector(".overview-page");
   if (!overview) return;
+
+  console.log(sprints)
 
   const allTasks = [
     ...sprints.flatMap(s => s.tasks),
