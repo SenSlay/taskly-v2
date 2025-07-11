@@ -45,40 +45,42 @@ function renderSprints() {
 
   sprintListContainer.innerHTML = ""; // Clear existing content
 
-  sprints.forEach((sprint, index) => {
+  sprints
+    .filter(sprint => sprint.status !== "completed") // ✅ Skip completed sprints
+    .forEach((sprint, index) => {
       if (!sprint.tasks) sprint.tasks = []; // Ensure tasks array exists
 
-      console.log(`Rendering Sprint: ${sprint.name}, Tasks:`, sprint.tasks); // Debugging
+      console.log(`Rendering Sprint: ${sprint.name}, Tasks:`, sprint.tasks);
 
       const sprintContainer = document.createElement("div");
       sprintContainer.className = "sprint-container";
       sprintContainer.id = sprint.id;
 
-      console.log(sprint.tasks.length);
-
       sprintContainer.innerHTML = `
-          <div class="sprint-header">
-              <h2>${sprint.name}</h2>
-              <div>
-                  <p><strong>Start:</strong> ${sprint.startDate}</p>
-                  <p><strong>End:</strong> ${sprint.endDate}</p>
-              </div>
-              <button class="button complete-btn" data-index="${index}">Complete Sprint</button>
-          </div>
-          <div class="issue-container">
-              ${sprint.tasks.length > 0 
-                  ? sprint.tasks.map(task => taskTemplate(task, index)).join("")
-                  : "This sprint has no tasks."}
-          </div>
-          <div>
-            <button class="create-issue-button" data-index="${index}">+ Create Task</button>
-          </div>
+        <div class="sprint-header">
+            <h2>${sprint.name}</h2>
+            <div>
+                <p><strong>Start:</strong> ${sprint.startDate}</p>
+                <p><strong>End:</strong> ${sprint.endDate}</p>
+                <p><strong>Status:</strong> ${sprint.status || "active"}</p>
+            </div>
+            <button class="button complete-btn" data-index="${index}">Complete Sprint</button>
+        </div>
+        <div class="issue-container">
+            ${sprint.tasks.length > 0 
+                ? sprint.tasks.map(task => taskTemplate(task, index)).join("")
+                : "This sprint has no tasks."}
+        </div>
+        <div>
+          <button class="create-issue-button" data-index="${index}">+ Create Task</button>
+        </div>
       `;
+
       sprintListContainer.prepend(sprintContainer);
-  });
+    });
 
   addSprintEventListeners();
-  console.log("Rendered sprints:", sprints); // Debugging
+  console.log("Rendered sprints:", sprints);
 }
 
 
@@ -184,7 +186,8 @@ function addSprint() {
         name,
         startDate,
         endDate,
-        tasks: [] // Ensure tasks array is initialized
+        tasks: [], // Ensure tasks array is initialized
+        status: "active" // or "completed"
     };
 
     sprints.push(sprint);
@@ -195,12 +198,14 @@ function addSprint() {
 
 // Attach Event Listeners
 function addSprintEventListeners() {
-    document.querySelectorAll(".complete-btn").forEach(button => {
+     document.querySelectorAll(".complete-btn").forEach(button => {
         button.addEventListener("click", function () {
             const index = this.dataset.index;
-            sprints.splice(index, 1);
-            saveData();
-            renderSprints();
+            if (sprints[index]) {
+                sprints[index].status = "completed"; // ✅ Mark as completed
+                saveData();
+                renderSprints();
+            }
         });
     });
 
@@ -723,37 +728,71 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log(sprints)
 
   const allTasks = [
-    ...sprints.flatMap(s => s.tasks),
-    ...backlogTasks
-  ];
+  ...sprints.flatMap(s => s.tasks),
+  ...backlogTasks
+];
 
-  const statusCounts = Object.fromEntries(kanbanColumns.map(status => [status, 0]));
-  allTasks.forEach(task => {
-    const status = (task.status || "").toUpperCase();
-    for (const col of kanbanColumns) {
-      if (col.toUpperCase() === status) {
-        statusCounts[col]++;
-        break;
-      }
+const statusCounts = {};
+kanbanColumns.forEach(col => statusCounts[col] = 0);
+
+allTasks.forEach(task => {
+  const taskStatus = (task.status || "").toUpperCase();
+  for (const col of kanbanColumns) {
+    if (col.toUpperCase() === taskStatus) {
+      statusCounts[col]++;
+      break;
     }
-  });
-
-  const statusCtx = document.getElementById("statusChart")?.getContext("2d");
-  if (statusCtx) {
-    new Chart(statusCtx, {
-      type: "pie",
-      data: {
-        labels: Object.keys(statusCounts),
-        datasets: [{
-          label: "Status",
-          data: Object.values(statusCounts),
-          backgroundColor: Object.keys(statusCounts).map((_, i) =>
-            `hsl(${i * 360 / Object.keys(statusCounts).length}, 70%, 60%)`)
-        }]
-      },
-      options: { responsive: true }
-    });
   }
+});
+
+const centerTextPlugin2 = {
+  id: "centerText",
+  beforeDraw(chart) {
+    const { width, height, ctx } = chart;
+    ctx.restore();
+
+    const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+    const text = `Total Tasks: ${total}`;
+
+    const fontSize = (height / 360).toFixed(2);
+    ctx.font = `${fontSize}em sans-serif`;
+    ctx.textBaseline = "middle";
+    const textX = Math.round((width - ctx.measureText(text).width) / 2);
+    const textY = height / 2;
+    ctx.fillText(text, textX, textY);
+    ctx.save();
+  }
+};
+
+const statusLabels = Object.keys(statusCounts);
+const statusData = Object.values(statusCounts);
+const statusColors = statusLabels.map((_, i) =>
+  `hsl(${(i * 360) / statusLabels.length}, 70%, 60%)`
+);
+
+const statusCtx = document.getElementById("statusChart")?.getContext("2d");
+if (statusCtx) {
+  new Chart(statusCtx, {
+    type: "doughnut",
+    data: {
+      labels: statusLabels,
+      datasets: [{
+        label: "Task Status",
+        data: statusData,
+        backgroundColor: statusColors
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "bottom"
+        }
+      }
+    },
+    plugins: [centerTextPlugin2]
+  });
+}
 
   const legendContainer = document.querySelector(".legend");
   if (legendContainer) {
@@ -761,18 +800,48 @@ document.addEventListener("DOMContentLoaded", () => {
     Object.keys(statusCounts).forEach((status, i) => {
       const color = `hsl(${i * 360 / Object.keys(statusCounts).length}, 70%, 60%)`;
       const p = document.createElement("p");
-      p.innerHTML = `<span style="color: ${color}">■</span> ${status}`;
+      p.innerHTML = `<span style="color: ${color}">■</span> ${status}: ${statusCounts[status]}`;
       legendContainer.appendChild(p);
     });
   }
 
-  const completedSprints = sprints.filter(s => s.completed).length;
-  const ongoingSprints = sprints.length - completedSprints;
+  const completedSprints = sprints.filter(s => s.status === "completed").length;
+  const totalSprints = sprints.length;
+  const ongoingSprints = totalSprints - completedSprints;
 
+  // Calculate percentage
+  const completionPercent = totalSprints === 0 
+    ? 0 
+    : Math.round((completedSprints / totalSprints) * 100);
+
+
+  // Create center label plugin
+  const centerTextPlugin = {
+    id: 'centerText',
+    beforeDraw(chart) {
+      const { width } = chart;
+      const { height } = chart;
+      const ctx = chart.ctx;
+      ctx.restore();
+
+      const fontSize = (height / 360).toFixed(2);
+      ctx.font = `${fontSize}em sans-serif`;
+      ctx.textBaseline = "middle";
+
+      const text = `Sprint Progress: ${completionPercent}%`;
+      const textX = Math.round((width - ctx.measureText(text).width) / 2);
+      const textY = height / 2;
+
+      ctx.fillText(text, textX, textY);
+      ctx.save();
+    }
+  };
+
+  // Render doughnut chart with plugin
   const ctxSprint = document.getElementById("sprintChart")?.getContext("2d");
   if (ctxSprint) {
     new Chart(ctxSprint, {
-      type: "pie",
+      type: "doughnut",
       data: {
         labels: ["Completed", "Ongoing"],
         datasets: [{
@@ -780,7 +849,15 @@ document.addEventListener("DOMContentLoaded", () => {
           backgroundColor: ["#4caf50", "#ff9800"]
         }]
       },
-      options: { responsive: true }
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "bottom"
+          }
+        }
+      },
+      plugins: [centerTextPlugin] // <-- Inject plugin here
     });
   }
 });
