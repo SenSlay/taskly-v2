@@ -46,38 +46,39 @@ function renderSprints() {
   sprintListContainer.innerHTML = ""; // Clear existing content
 
   sprints
-    .filter(sprint => sprint.status !== "completed") // ✅ Skip completed sprints
-    .forEach((sprint, index) => {
-      if (!sprint.tasks) sprint.tasks = []; // Ensure tasks array exists
+  .map((s, i) => ({ ...s, originalIndex: i })) // Attach true index
+  .filter(sprint => sprint.status !== "completed")
+  .forEach((sprint, i) => {
+    const originalIndex = sprint.originalIndex;
 
-      console.log(`Rendering Sprint: ${sprint.name}, Tasks:`, sprint.tasks);
+    if (!sprint.tasks) sprint.tasks = [];
 
-      const sprintContainer = document.createElement("div");
-      sprintContainer.className = "sprint-container";
-      sprintContainer.id = sprint.id;
+    const sprintContainer = document.createElement("div");
+    sprintContainer.className = "sprint-container";
+    sprintContainer.id = sprint.id;
 
-      sprintContainer.innerHTML = `
-        <div class="sprint-header">
-            <h2>${sprint.name}</h2>
-            <div>
-                <p><strong>Start:</strong> ${sprint.startDate}</p>
-                <p><strong>End:</strong> ${sprint.endDate}</p>
-                <p><strong>Status:</strong> ${sprint.status || "active"}</p>
-            </div>
-            <button class="button complete-btn" data-index="${index}">Complete Sprint</button>
-        </div>
-        <div class="issue-container">
-            ${sprint.tasks.length > 0 
-                ? sprint.tasks.map(task => taskTemplate(task, index)).join("")
-                : "This sprint has no tasks."}
-        </div>
-        <div>
-          <button class="create-issue-button" data-index="${index}">+ Create Task</button>
-        </div>
-      `;
+    sprintContainer.innerHTML = `
+      <div class="sprint-header">
+          <h2>${sprint.name}</h2>
+          <div>
+              <p><strong>Start:</strong> ${sprint.startDate}</p>
+              <p><strong>End:</strong> ${sprint.endDate}</p>
+              <p><strong>Status:</strong> ${sprint.status || "active"}</p>
+          </div>
+          <button class="button complete-btn" data-index="${originalIndex}">Complete Sprint</button>
+      </div>
+      <div class="issue-container">
+          ${sprint.tasks.length > 0 
+              ? sprint.tasks.map(task => taskTemplate(task, originalIndex)).join("")
+              : "This sprint has no tasks."}
+      </div>
+      <div>
+        <button class="create-issue-button" data-index="${originalIndex}">+ Create Task</button>
+      </div>
+    `;
 
-      sprintListContainer.prepend(sprintContainer);
-    });
+    sprintListContainer.prepend(sprintContainer);
+  });
 
   addSprintEventListeners();
   console.log("Rendered sprints:", sprints);
@@ -398,41 +399,57 @@ if (board) {
     }
 
     function addTaskToColumn(taskContainer, task) {
-      const taskItem = document.createElement("div");
-      taskItem.classList.add("task-item");
-      taskItem.setAttribute('draggable', true);
-      taskItem.dataset.taskId = task.id; // Store task ID for reference
-  
-      // Add the class to mark it as being dragged
-      taskItem.addEventListener('dragstart', function () {
-          taskItem.classList.add('dragging');
-      });
-  
-      taskItem.addEventListener('dragend', function () {
-          taskItem.classList.remove('dragging');
-      });
-  
-      // Create a text display for both task name and assignee
-      const taskText = document.createElement("span");
-      taskText.textContent = `${task.name} (Assigned to: ${task.assigned})`;
-  
-      // Create a delete button for the task
-      const deleteBtn = document.createElement("button");
-      deleteBtn.classList.add("delete-btn");
-      deleteBtn.textContent = "x";
-  
-      deleteBtn.addEventListener("click", function () {
-        console.log("Clicked delete for task:", task.id); // Debugging
-        removeTask(taskItem.dataset.taskId);  // Remove from storage
-        taskContainer.removeChild(taskItem);  // Remove from UI
-      });
+    const taskItem = document.createElement("div");
+    taskItem.classList.add("task-item");
+    taskItem.setAttribute("draggable", true);
+    taskItem.dataset.taskId = task.id;
 
-      // Append the task text and delete button to the task item
-      taskItem.appendChild(taskText);
-      taskItem.appendChild(deleteBtn);
-  
-      // Append the task item to the task container
-      taskContainer.appendChild(taskItem);
+    // Enable drag behavior
+    taskItem.addEventListener("dragstart", () => taskItem.classList.add("dragging"));
+    taskItem.addEventListener("dragend", () => taskItem.classList.remove("dragging"));
+
+    // Task content wrapper
+    const content = document.createElement("div");
+    content.classList.add("task-content");
+
+    // Title / Task name
+    const name = document.createElement("div");
+    name.classList.add("task-title");
+    name.textContent = task.name;
+
+    // Meta info container
+    const meta = document.createElement("div");
+    meta.classList.add("task-meta");
+
+    const status = document.createElement("span");
+    status.classList.add("task-status");
+    status.textContent = task.status;
+
+    const assignee = document.createElement("span");
+    
+    assignee.classList.add("task-assignee");
+    assignee.textContent = `👤 ${task.assigned || "Unassigned"}`;
+
+    meta.append(status, assignee);
+
+    // Actions
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("delete-btn");
+    deleteBtn.textContent = "🗑️";
+    deleteBtn.title = "Delete Task";
+
+    deleteBtn.addEventListener("click", function () {
+      const confirmed = window.confirm("Are you sure you want to delete this task?");
+      if (confirmed) {
+        removeTask(task.id);
+        localStorage.setItem("backlogTasks", JSON.stringify(backlogTasks));
+        taskContainer.removeChild(taskItem); // Also remove from UI
+      }
+    });
+
+    content.append(name, assignee, status);
+    taskItem.append(content, deleteBtn);
+    taskContainer.appendChild(taskItem);
   }
 
   function renderTasksForColumn(taskContainer, columnName) {
