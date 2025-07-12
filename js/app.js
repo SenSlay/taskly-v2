@@ -681,14 +681,34 @@ if (board) {
     }
 
     function saveColumnName(header, currentText, input) {
-        const newText = input.value.trim().toUpperCase() || "Untitled Column";
-        const index = kanbanColumns.indexOf(currentText.toUpperCase());
-        
-        if (index !== -1) {
-            kanbanColumns[index] = newText;
-            saveColumns();
-        }
-        header.textContent = newText;
+    const newText = input.value.trim().toUpperCase() || "UNTITLED COLUMN";
+    const index = kanbanColumns.findIndex(col => col.toUpperCase() === currentText.toUpperCase());
+
+    if (index !== -1) {
+      // Update kanban column name
+      kanbanColumns[index] = newText;
+
+      // Update statuses in backlogTasks
+      backlogTasks.forEach(task => {
+          if (task.status?.toUpperCase() === currentText.toUpperCase()) {
+              task.status = newText;
+          }
+      });
+
+      // Update statuses in sprint tasks
+      sprints.forEach(sprint => {
+          sprint.tasks.forEach(task => {
+              if (task.status?.toUpperCase() === currentText.toUpperCase()) {
+                  task.status = newText;
+              }
+          });
+      });
+
+      saveColumns();
+      saveData(); // Save updated tasks
+      }
+
+      header.textContent = newText;
     }
 
     function deleteColumn(column) {
