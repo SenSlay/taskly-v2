@@ -15,7 +15,7 @@ console.log("Loaded sprints from localStorage:", sprints);
 function saveData() {
     localStorage.setItem("sprints", JSON.stringify(sprints));
     console.log("Saved sprints:", sprints);
-}
+} 
 
 // Function to Render Task Status Options in Modal
 function renderModalTaskStatus() {
