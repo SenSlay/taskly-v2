@@ -25,6 +25,11 @@ h1 {
   margin-left: auto;
 }
 
+.backlog-container .create-sprint-button:hover {
+  background: #717C7C;
+  color: white;
+}
+
 .backlog-container > div:first-child h2, .sprint-container > div:first-child h2 {
   font-size: 18px;
   margin-right: 10px;
@@ -32,7 +37,6 @@ h1 {
 
 .backlog-container > div:first-child p, .sprint-container > div:first-child p {
   color: rgb(69, 69, 69);
-
 }
 
 .issue-container {
@@ -49,6 +53,13 @@ h1 {
   padding: 5px 20px;
   border-radius: 5px;
   cursor: pointer;
+}
+.create-issue-button:hover, .create-backlog-task-button:hover {
+  padding: 5px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #717C7C;
+  color: white;
 }
 
 .sprint-list-container {
@@ -179,6 +190,9 @@ h1 {
 
 .backlog-content .delete-task:hover {
   color: #ff4444;
+}
+.backlog-content .edit-task:hover {
+  color: green;
 }
 
 /* Task Modal Styles */
