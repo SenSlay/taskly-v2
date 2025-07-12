@@ -68,7 +68,7 @@ function renderSprints() {
           <button class="button complete-btn" data-index="${originalIndex}">Complete Sprint</button>
       </div>
       <div class="issue-container">
-          ${sprint.tasks.length > 0 
+          ${sprint.tasks.length > 0
               ? sprint.tasks.map(task => taskTemplate(task, originalIndex)).join("")
               : "This sprint has no tasks."}
       </div>
@@ -140,7 +140,7 @@ function saveTaskEdits(taskId, sprintIndex = "backlog") {
   if (sprintIndex === "backlog") {
       // Update in Backlog
       task = backlogTasks.find(t => t.id == taskId);
-      
+
   } else {
       // Update in Sprint
       task = sprints[sprintIndex].tasks.find(t => t.id == taskId);
@@ -293,14 +293,14 @@ function saveData() {
 }
 
 function renderBacklogTasks() {
-  const backlogContainer = document.querySelector(".backlog-container"); 
-  if (!backlogContainer) return; 
+  const backlogContainer = document.querySelector(".backlog-container");
+  if (!backlogContainer) return;
 
   const issueContainer = backlogContainer.querySelector(".issue-container");
   if (!issueContainer) return;
 
-  issueContainer.innerHTML = backlogTasks.length === 0 
-      ? "<p>Your backlog is empty.</p>" 
+  issueContainer.innerHTML = backlogTasks.length === 0
+      ? "<p>Your backlog is empty.</p>"
       : backlogTasks.map(task => taskTemplate(task, null)).join("");
 
   addBacklogTaskEventListeners();
@@ -382,19 +382,19 @@ if (board) {
 
     function removeTask(taskId) {
       taskId = Number(taskId); // Ensure it's a number
-  
+
       // Remove from backlog
       backlogTasks = backlogTasks.filter(task => task.id !== taskId);
-  
+
       // Remove from sprints
       sprints.forEach(sprint => {
           sprint.tasks = sprint.tasks.filter(task => task.id !== taskId);
       });
-  
+
       // Update localStorage
       localStorage.setItem("backlogTasks", JSON.stringify(backlogTasks));
       localStorage.setItem("sprints", JSON.stringify(sprints));
-  
+
       console.log("Deleted Task ID:", taskId); // Debugging
     }
 
@@ -426,7 +426,7 @@ if (board) {
     status.textContent = task.status;
 
     const assignee = document.createElement("span");
-    
+
     assignee.classList.add("task-assignee");
     assignee.textContent = `👤 ${task.assigned || "Unassigned"}`;
 
@@ -435,7 +435,8 @@ if (board) {
     // Actions
     const deleteBtn = document.createElement("button");
     deleteBtn.classList.add("delete-btn");
-    deleteBtn.textContent = "🗑️";
+    // deleteBtn.textContent = "🗑️";
+    deleteBtn.textContent = "";
     deleteBtn.title = "Delete Task";
 
     deleteBtn.addEventListener("click", function () {
@@ -521,15 +522,15 @@ if (board) {
         taskContainer.addEventListener("dragover", function (e) {
           e.preventDefault(); // Allow dropping
       });
-      
+
       taskContainer.addEventListener("drop", function (e) {
           e.preventDefault();
           const draggedTask = document.querySelector(".dragging");
           if (!draggedTask) return;
-      
+
           const taskId = Number(draggedTask.dataset.taskId); // Get task ID
           const newStatus = titleSpan.textContent.trim(); // Get new column name
-      
+
           updateTaskStatus(taskId, newStatus); // Update status in storage
           taskContainer.appendChild(draggedTask); // Move to new column
       });
@@ -553,7 +554,7 @@ if (board) {
 
     function updateTaskStatus(taskId, newStatus) {
       taskId = Number(taskId); // Ensure it's a number
-  
+
       // Check backlog first
       let task = backlogTasks.find(task => task.id === taskId);
       if (task) {
@@ -568,11 +569,11 @@ if (board) {
               });
           });
       }
-  
+
       // Save updated data
       localStorage.setItem("backlogTasks", JSON.stringify(backlogTasks));
       localStorage.setItem("sprints", JSON.stringify(sprints));
-  
+
       console.log(`Task ${taskId} moved to ${newStatus}`); // Debugging
   }
 
@@ -599,15 +600,15 @@ if (board) {
           assigned: assignee,
           status: status
       };
-  
+
       backlogTasks.push(newTask);
-  
+
       // ✅ Save backlogTasks to localStorage
       localStorage.setItem("backlogTasks", JSON.stringify(backlogTasks));
-  
+
       renderBoard(); // Re-render UI
     }
-  
+
 
     closeModalBtn.addEventListener("click", function () {
         modal.style.display = "none";
@@ -681,40 +682,20 @@ if (board) {
     }
 
     function saveColumnName(header, currentText, input) {
-    const newText = input.value.trim().toUpperCase() || "UNTITLED COLUMN";
-    const index = kanbanColumns.findIndex(col => col.toUpperCase() === currentText.toUpperCase());
+        const newText = input.value.trim().toUpperCase() || "Untitled Column";
+        const index = kanbanColumns.indexOf(currentText.toUpperCase());
 
-    if (index !== -1) {
-      // Update kanban column name
-      kanbanColumns[index] = newText;
-
-      // Update statuses in backlogTasks
-      backlogTasks.forEach(task => {
-          if (task.status?.toUpperCase() === currentText.toUpperCase()) {
-              task.status = newText;
-          }
-      });
-
-      // Update statuses in sprint tasks
-      sprints.forEach(sprint => {
-          sprint.tasks.forEach(task => {
-              if (task.status?.toUpperCase() === currentText.toUpperCase()) {
-                  task.status = newText;
-              }
-          });
-      });
-
-      saveColumns();
-      saveData(); // Save updated tasks
-      }
-
-      header.textContent = newText;
+        if (index !== -1) {
+            kanbanColumns[index] = newText;
+            saveColumns();
+        }
+        header.textContent = newText;
     }
 
     function deleteColumn(column) {
       const columnName = column.querySelector(".column-header span").textContent;
       const index = kanbanColumns.findIndex(col => col.toUpperCase() === columnName.toUpperCase());
-      
+
       if (index !== -1) {
           // Update tasks that were in this column
           backlogTasks.forEach(task => {
@@ -722,7 +703,7 @@ if (board) {
                   task.status = ""; // Remove status
               }
           });
-  
+
           // Also update tasks in sprints
           sprints.forEach(sprint => {
               sprint.tasks.forEach(task => {
@@ -731,7 +712,7 @@ if (board) {
                   }
               });
           });
-  
+
           // Remove the column
           kanbanColumns.splice(index, 1);
           saveColumns();
@@ -847,8 +828,8 @@ if (statusCtx) {
   const ongoingSprints = totalSprints - completedSprints;
 
   // Calculate percentage
-  const completionPercent = totalSprints === 0 
-    ? 0 
+  const completionPercent = totalSprints === 0
+    ? 0
     : Math.round((completedSprints / totalSprints) * 100);
 
 
