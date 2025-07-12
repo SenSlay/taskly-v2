@@ -102,6 +102,10 @@ main {
   transition: 0.1s;
 }
 
+.sidebar > div:first-child:hover {
+  color: #C34043;
+}
+
 .main-content {
   flex-grow: 1;
   padding: 20px 40px;
@@ -114,4 +118,5 @@ main {
   margin-bottom: 40px;
 
 }
+
 
