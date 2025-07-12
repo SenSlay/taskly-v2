@@ -9,10 +9,7 @@ h1 {
   gap: 15px;
   background-color: #F8F8F8;
   padding: 15px;
-  border: 3px solid #262626;
-
-  background:#262626;
-  color: white;
+  /* border: 3px solid #262626; */
 }
 
 .backlog-container > div:first-child, .sprint-container > div:first-child {
@@ -34,7 +31,7 @@ h1 {
 }
 
 .backlog-container > div:first-child p, .sprint-container > div:first-child p {
-  color: white;
+  color: rgb(69, 69, 69);
 
 }
 
@@ -174,10 +171,10 @@ h1 {
 }
 
 .backlog-content .delete-task, .edit-task {
-  background: white;
+  background: none;
   cursor: pointer;
   padding: 5px;
-  color: black;
+  color: #000;
 }
 
 .backlog-content .delete-task:hover {
@@ -276,7 +273,7 @@ h1 {
 
 .backlog-content .task-details span:not(:first-child) {
   font-size: 14px;
-  color: white;
+  color: #666;
   display: flex;
   gap: 15px;
 }
@@ -296,6 +293,4 @@ h1 {
   border: 1px solid #000;
   border-radius: 4px;
   gap: 15px;
-  background:#262626;
-  color: white;
 }
