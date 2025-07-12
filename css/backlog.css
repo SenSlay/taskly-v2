@@ -1,14 +1,24 @@
+
+h1 {
+  color: #717C7C;
+}
+
 .backlog-container, .sprint-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background-color: rgb(232, 229, 229);
+  background-color: #F8F8F8;
   padding: 15px;
+  border: 3px solid #262626;
+
+  background:#262626;
+  color: white;
 }
 
 .backlog-container > div:first-child, .sprint-container > div:first-child {
   display: flex;
   align-items: center;
+
 }
 
 .backlog-container .create-sprint-button {
@@ -19,21 +29,23 @@
 }
 
 .backlog-container > div:first-child h2, .sprint-container > div:first-child h2 {
-  font-size: 18px; 
+  font-size: 18px;
   margin-right: 10px;
 }
 
 .backlog-container > div:first-child p, .sprint-container > div:first-child p {
-  color: rgb(69, 69, 69);
+  color: white;
+
 }
 
 .issue-container {
   border: 1px solid rgb(120, 120, 120);
+  padding: 5px;
   justify-content: space-between;
 
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 15px;
 }
 
 .create-issue-button, .create-backlog-task-button {
@@ -58,8 +70,9 @@
 }
 
 .sprint-header {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+
 }
 
 .sprint-header h2 {
@@ -67,7 +80,7 @@
 }
 
 .sprint-header > div {
-  display: flex; 
+  display: flex;
   gap: 20px;
 }
 
@@ -118,7 +131,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
+  background: #262626;
+
+  color: white;
   padding: 20px;
   width: 350px;
   border-radius: 8px;
@@ -159,10 +174,10 @@
 }
 
 .backlog-content .delete-task, .edit-task {
-  background: none;
+  background: white;
   cursor: pointer;
   padding: 5px;
-  color: #000;
+  color: black;
 }
 
 .backlog-content .delete-task:hover {
@@ -192,16 +207,23 @@
   left: 50%;
   transform: translate(-50%, -50%);
   border: 1px solid black;
+
+  background: #262626;
+
+  color: white;
 }
 
 .backlog-content .form-group {
   margin-bottom: 15px;
+
 }
 
 .backlog-content .form-group label {
   display: block;
   margin-bottom: 5px;
-  color: black;
+  background: #262626;
+
+  color: white;
 }
 
 .backlog-content .form-group input,
@@ -254,7 +276,7 @@
 
 .backlog-content .task-details span:not(:first-child) {
   font-size: 14px;
-  color: #666;
+  color: white;
   display: flex;
   gap: 15px;
 }
@@ -274,4 +296,6 @@
   border: 1px solid #000;
   border-radius: 4px;
   gap: 15px;
+  background:#262626;
+  color: white;
 }
