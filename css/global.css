@@ -115,3 +115,6 @@ main {
 
 }
 
+.sidebar > div:first-child:hover {
+  color: #C34043;
+}
