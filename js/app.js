@@ -924,22 +924,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const password = document.getElementById("loginPassword").value;
         const users = JSON.parse(localStorage.getItem("users") || "[]");
         const user = users.find(u => u.email === email && u.password === password);
-        const session ={
-            email,
-            token: Date.now(),
-            expires: Date.now() + 60 * 60 * 1000
-        };
-        localStorage.setItem("session", JSON.stringify(session));
-        window.location.href = "/pages/backlog.html";
-        });
-
         const errorElem = document.getElementById("loginError");
+
         if (!user) {
             errorElem.textContent = "Invalid credentials.";
-        return;
+            return;
         }
 
+        const session = {
+            email: user.email,
+            token: Date.now(),
+            expires: Date.now() + 60 * 60 * 1000,
+        };
+
+        localStorage.setItem("session", JSON.stringify(session));
+        window.location.href = "/pages/backlog.html";
     }
+
 });
 
 function checkAuth(){
