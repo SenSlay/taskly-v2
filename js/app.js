@@ -882,53 +882,63 @@ if (statusCtx) {
 });
 
 // ---------------------------Changes------------------------------ <-
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded",() => {
     const registerForm = document.getElementById("registerForm");
+
     if (registerForm) {
-    registerForm.addEventListener("submit", function(e){
+        registerForm.addEventListener("submit", function (e) {
         e.preventDefault();
+
         const email = document.getElementById("registerEmail").value.trim();
         const password = document.getElementById("registerPassword").value;
-
+        const confirm = document.getElementById("registerConfirm").value;
         const errorElem = document.getElementById("registerError");
-        if (!email || !password){
-            errorElem.textContent = "Need to fill out all the fields";
-            return;
+
+        if (!email || !password || !confirm) {
+            errorElem.textContent = "Please fill out all fields";
+        return;
         }
 
         if (password.length < 8) {
-            errorElem.textContent = "Password must be 8 letters or more";
-            return;
+            errorElem.textContent = "Password must be 8 characters or more";
+        return;
+        }
+
+        if (password !== confirm) {
+            errorElem.textContent = "Passwords do not match";
+        return;
         }
 
         const users = JSON.parse(localStorage.getItem("users") || "[]");
-        if (users.some(user => user.email === email)){
+
+        if (users.some((u) => u.email === email)) {
             errorElem.textContent = "Email already registered";
             return;
         }
 
         users.push({ email, password });
         localStorage.setItem("users", JSON.stringify(users));
-        window.location.href = "/pages/backlog.html";
-    });
-    }
-});
 
-document.addEventListener("DOMContentLoaded", () => {
+        window.location.href = "/pages/login.html";
+    });
+}
+
     const loginForm = document.getElementById("loginForm");
 
     if (loginForm) {
-        loginForm.addEventListener("submit", function(e) {
+        loginForm.addEventListener("submit", function (e) {
         e.preventDefault();
+
         const email = document.getElementById("loginEmail").value.trim();
         const password = document.getElementById("loginPassword").value;
-        const users = JSON.parse(localStorage.getItem("users") || "[]");
-        const user = users.find(u => u.email === email && u.password === password);
         const errorElem = document.getElementById("loginError");
+
+        const users = JSON.parse(localStorage.getItem("users") || "[]");
+        const user = users.find((u) => u.email === email && u.password === password);
 
         if (!user) {
             errorElem.textContent = "Invalid credentials.";
-            return;
+        return;
         }
 
         const session = {
@@ -939,8 +949,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         localStorage.setItem("session", JSON.stringify(session));
         window.location.href = "/pages/backlog.html";
+        });
     }
-
 });
 
 function checkAuth(){
