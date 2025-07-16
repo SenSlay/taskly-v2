@@ -11,16 +11,19 @@
 </head>
 <body>
   <div class="page-container">
-    <header>
-      <h1>Taskly</h1>
-      <div>
-        <div>
-          <div>
-            <i class="fa-solid fa-circle-user" style="font-size: 20px; margin-right: 5px;"></i>
-            <span id="userEmail">Username</span>
-          </div>
-      </div>
-    </header>
+<header>
+  <h1>Taskly</h1>
+  <div class="userDropdown">
+    <div class="userInfo">
+      <i class="fa-solid fa-circle-user" style="font-size: 20px; margin-right: 5px;"></i>
+      <span id="userEmail">Username</span>
+      <i class="fa-solid fa-caret-down" style="margin-left: 5px;"></i>
+    </div>
+    <div class="dropdownMenu" id="dropdown_Menu">
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </div>
+</header>
 
 
   <main class="backlog-content">
