@@ -948,7 +948,7 @@ document.addEventListener("DOMContentLoaded",() => {
         };
 
         localStorage.setItem("session", JSON.stringify(session));
-        window.location.href = "/pages/backlog.html";
+        window.location.href = "/pages/overview.html";
         });
     }
 });
