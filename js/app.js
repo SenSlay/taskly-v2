@@ -920,8 +920,8 @@ document.addEventListener("DOMContentLoaded",() => {
         localStorage.setItem("users", JSON.stringify(users));
 
         window.location.href = "/pages/login.html";
-    });
-}
+        });
+    }
 
     const loginForm = document.getElementById("loginForm");
 
@@ -968,14 +968,28 @@ document.addEventListener("DOMContentLoaded",() => {
     }
 });
 
-
-document.addEventListener("DOMContentLoaded",() => {
+document.addEventListener("DOMContentLoaded",() =>{
     const logoutBtn = document.getElementById("logoutBtn");
+    const userInfo = document.querySelector(".userInfo");
+    const dropdownMenu = document.getElementById("dropdown_Menu");
 
     if (logoutBtn) {
         logoutBtn.addEventListener("click",() => {
         localStorage.removeItem("session");
         window.location.href = "/pages/login.html";
+    });
+    }
+
+    if (userInfo && dropdownMenu) {
+        userInfo.addEventListener("click",(e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle("show");
+        });
+
+        document.addEventListener("click",(event) => {
+        if (!event.target.closest(".userDropdown")) {
+            dropdownMenu.classList.remove("show");
+        }
         });
     }
 });
