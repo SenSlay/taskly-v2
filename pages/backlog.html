@@ -15,9 +15,10 @@
       <h1>Taskly</h1>
       <div>
         <div>
-          <i class="fa-solid fa-circle-user" style="font-size: 20px; margin-right: 5px;"></i>
-          Username
-        </div>
+          <div>
+            <i class="fa-solid fa-circle-user" style="font-size: 20px; margin-right: 5px;"></i>
+            <span id="userEmail">Username</span>
+          </div>
       </div>
     </header>
 
@@ -30,9 +31,9 @@
       </div>
       <a href="overview.html"><i class="fa-solid fa-chart-pie"></i>Overview</a>
       <a href="#" class="active-link"><i class="fa-solid fa-list-check"></i>Backlog</a>
-      <a href="board.html"><i class="fa-solid fa-chart-simple"></i>Board</a>  
+      <a href="board.html"><i class="fa-solid fa-chart-simple"></i>Board</a>
       <div class="line"></div>
-      <a href="#"><i class="fa-solid fa-gears"></i>Project Settings</a>  
+      <a href="#"><i class="fa-solid fa-gears"></i>Project Settings</a>
     </aside>
 
     <!-- When writing CSS, use ".backlog-content" first to avoid conflict with other class names -->
@@ -41,7 +42,7 @@
 
       <!-- WRITE THE CONTENT HERE -->
       <ul class="sprint-list-container">
-        
+
       </ul>
 
       <div class="backlog-container">
@@ -67,9 +68,9 @@
         <h2 class="modal-title" id="modalTitle">CREATE SPRINT</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-        
+
         <!-- PLACE THE FORM BELOW IN A FORM ELEMENT <FORM></FORM> -->
-        
+
         <div class="modal-body">
           <form id="sprintForm">
               <div class="mb-3">
