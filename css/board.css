@@ -1,3 +1,8 @@
+
+h1 {
+  color: #717C7C;
+}
+
 .board-container {
   display: flex;
   align-items: flex-start;
@@ -194,4 +199,52 @@ button {
 .delete-btn:hover {
   opacity: 0.7;
 }
- 
+
+.userDropdown {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.userInfo {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.dropdownMenu {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  position: absolute;
+  top: 40px;
+  left: 1px;
+  height: 50px;
+  background: #262626;
+  min-width: 259.9px;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dropdownMenu.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dropdownMenu button {
+  width: 100%;
+  height: 100%;
+  background: #262626;
+  color: #717C7C;
+  border: none;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.dropdownMenu button:hover{
+  background-color: #3e3e3e;
+}
