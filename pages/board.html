@@ -13,14 +13,17 @@
   <div class="page-container">
     <header>
       <h1>Taskly</h1>
-      <div>
-        <div>
+      <div class="userDropdown">
+        <div class="userInfo">
           <i class="fa-solid fa-circle-user" style="font-size: 20px; margin-right: 5px;"></i>
-          Username
+          <span id="userEmail">Username</span>
+          <i class="fa-solid fa-caret-down" style="margin-left: 5px;"></i>
+        </div>
+        <div class="dropdownMenu" id="dropdown_Menu">
+          <button id="logoutBtn">Logout</button>
         </div>
       </div>
     </header>
-
 
   <main>
     <aside class="sidebar">
@@ -30,9 +33,9 @@
       </div>
       <a href="overview.html"><i class="fa-solid fa-chart-pie"></i>Overview</a>
       <a href="backlog.html"><i class="fa-solid fa-list-check"></i>Backlog</a>
-      <a href="board.html" class="active-link"><i class="fa-solid fa-chart-simple"></i>Board</a>  
+      <a href="board.html" class="active-link"><i class="fa-solid fa-chart-simple"></i>Board</a>
       <div class="line"></div>
-      <a href="#"><i class="fa-solid fa-gears"></i>Project Settings</a>  
+      <a href="#"><i class="fa-solid fa-gears"></i>Project Settings</a>
     </aside>
 
     <div class="main-content board-content">
@@ -41,7 +44,7 @@
       <div class="board-container">
         <div class="board">
           <!-- sample column for designing -->
-           
+
           <!-- <div class="column">
             <div class="column-header"><span>TO DO</span></div>
             <ul class="task-container"></ul>
@@ -66,4 +69,4 @@
   <script src="../js/app.js"></script>
   <script src="../js/app.js"></script>
 </body>
-</html>  
+</html>

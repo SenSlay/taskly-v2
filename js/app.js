@@ -1,6 +1,7 @@
 console.log("For backlog page");
 
 // Load Data from Local Storage
+//
 let sprints = JSON.parse(localStorage.getItem("sprints")) || [];
 let backlogTasks = JSON.parse(localStorage.getItem("backlogTasks")) || [];
 
@@ -15,7 +16,7 @@ console.log("Loaded sprints from localStorage:", sprints);
 function saveData() {
     localStorage.setItem("sprints", JSON.stringify(sprints));
     console.log("Saved sprints:", sprints);
-} 
+}
 
 // Function to Render Task Status Options in Modal
 function renderModalTaskStatus() {
@@ -875,7 +876,132 @@ if (statusCtx) {
           }
         }
       },
-      plugins: [centerTextPlugin] // <-- Inject plugin here
+      plugins: [centerTextPlugin]
     });
   }
 });
+
+// ---------------------------Changes------------------------------ <-
+document.addEventListener("DOMContentLoaded",() => {
+    const registerForm = document.getElementById("registerForm");
+
+    if (registerForm) {
+        registerForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const email = document.getElementById("registerEmail").value.trim();
+        const password = document.getElementById("registerPassword").value;
+        const confirm = document.getElementById("registerConfirm").value;
+        const errorElem = document.getElementById("registerError");
+
+        if (!email || !password || !confirm) {
+            errorElem.textContent = "Please fill out all fields";
+        return;
+        }
+
+        if (password.length < 8) {
+            errorElem.textContent = "Password must be 8 characters or more";
+        return;
+        }
+
+        if (password !== confirm) {
+            errorElem.textContent = "Passwords do not match";
+        return;
+        }
+
+        const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+        if (users.some((u) => u.email === email)) {
+            errorElem.textContent = "Email already registered";
+            return;
+        }
+
+        users.push({ email, password });
+        localStorage.setItem("users", JSON.stringify(users));
+
+        window.location.href = "/pages/login.html";
+        });
+    }
+
+    const loginForm = document.getElementById("loginForm");
+
+    if (loginForm) {
+        loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const email = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value;
+        const errorElem = document.getElementById("loginError");
+
+        const users = JSON.parse(localStorage.getItem("users") || "[]");
+        const user = users.find((u) => u.email === email && u.password === password);
+
+        if (!user) {
+            errorElem.textContent = "Invalid credentials.";
+        return;
+        }
+
+        const session = {
+            email: user.email,
+            token: Date.now(),
+            expires: Date.now() + 60 * 60 * 1000,
+        };
+
+        localStorage.setItem("session", JSON.stringify(session));
+        window.location.href = "/pages/overview.html";
+        });
+    }
+});
+
+function checkAuth(){
+    const session = JSON.parse(localStorage.getItem("session"));
+
+    if (!session||session.expires < Date.now()){
+        localStorage.removeItem("session");
+        window.location.href = "/pages/login.html";
+    }
+}
+
+document.addEventListener("DOMContentLoaded",() => {
+    if (document.body.classList.contains("protected")) {
+        checkAuth();
+    }
+});
+
+document.addEventListener("DOMContentLoaded",() =>{
+    const logoutBtn = document.getElementById("logoutBtn");
+    const userInfo = document.querySelector(".userInfo");
+    const dropdownMenu = document.getElementById("dropdown_Menu");
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click",() => {
+        localStorage.removeItem("session");
+        window.location.href = "/pages/login.html";
+    });
+    }
+
+    if (userInfo && dropdownMenu) {
+        userInfo.addEventListener("click",(e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle("show");
+        });
+
+        document.addEventListener("click",(event) => {
+        if (!event.target.closest(".userDropdown")) {
+            dropdownMenu.classList.remove("show");
+        }
+        });
+    }
+});
+
+document.addEventListener("DOMContentLoaded",() => {
+    const userEmailSpan = document.getElementById("userEmail");
+    const session = JSON.parse(localStorage.getItem("session"));
+
+    if (userEmailSpan && session?.email) {
+        userEmailSpan.textContent = session.email;
+    }
+});
+
+
+

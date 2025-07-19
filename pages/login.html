@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Taskly - Login</title>
+  <link rel="stylesheet" href="../css/login.css" />
+  <link rel="stylesheet" href="../css/global.css" />
+</head>
+<body>
+  <div class="loginContainer">
+    <div class="login">
+      <h1 class="logo">Taskly</h1>
+      <p class="subtitle">Log in to continue</p>
+
+      <form id="loginForm" class="authForm">
+        <input type="email" id="loginEmail" placeholder="Enter your email" required />
+        <input type="password" id="loginPassword" placeholder="Enter password" required />
+
+        <div class="rememberCheck">
+          <input type="checkbox" id="rememberMe" />
+          <label for="rememberMe">Remember me</label>
+        </div>
+
+        <p id="loginError" class="errorMsg"></p>
+        <button type="submit" class="loginBtn">Login</button>
+      </form>
+
+      <div class="divider">or continue with:</div>
+
+      <div class="socialLogins">
+        <div class="authProviders">
+          <button class="social google" id="googleLogin">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo" />
+            Google
+          </button>
+          <button class="social microsoft">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft logo" />
+            Microsoft
+          </button>
+          <button class="social facebook">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook logo" />
+            Facebook
+          </button>
+          <button class="social apple">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple logo" />
+            Apple
+          </button>
+        </div>
+      </div>
+
+      <div class="loginLinks">
+        <a href="#">Can't login?</a>
+        <a href="/pages/register.html">Create an account</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+</html>
