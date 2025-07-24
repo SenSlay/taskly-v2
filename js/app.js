@@ -919,7 +919,7 @@ document.addEventListener("DOMContentLoaded",() => {
         users.push({ email, password });
         localStorage.setItem("users", JSON.stringify(users));
 
-        window.location.href = "/pages/login.html";
+        window.location.href = "login.html";
         });
     }
 
@@ -948,7 +948,7 @@ document.addEventListener("DOMContentLoaded",() => {
         };
 
         localStorage.setItem("session", JSON.stringify(session));
-        window.location.href = "/pages/overview.html";
+        window.location.href = "overview.html";
         });
     }
 });
@@ -958,7 +958,7 @@ function checkAuth(){
 
     if (!session||session.expires < Date.now()){
         localStorage.removeItem("session");
-        window.location.href = "/pages/login.html";
+        window.location.href = "login.html";
     }
 }
 
